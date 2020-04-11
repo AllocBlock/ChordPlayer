@@ -1,0 +1,303 @@
+html, body{
+	width: 100%;
+	height: 100%;
+	min-height: 500px;
+	min-width: 600px;
+
+	padding: 0;
+	margin: 0;
+	background-color: #a88;
+	position: relative;
+
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+embed{
+	width: 30px;
+	height: 30px;
+	pointer-events: none;
+}
+
+#body{
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#loading{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: #faa;
+
+	color: black;
+
+	z-index: 9;
+}
+#toast-contain{
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 10;
+	pointer-events: none; /* 不阻挡所有点击事件 */
+}
+#toast{
+	height: 30px;
+	min-width: 60px;
+	background-color: #511;
+	border-radius: 25px;
+	color: white;
+	padding: 5px 30px;
+}
+
+#part-panel {
+	width: 30%;
+	height: calc(100% - 100px);
+	background-color: #fa7;
+	flex-shrink: 0;
+
+	position: relative;	
+	display: flex;
+	flex-direction: column;
+}
+	#button-add-chord{
+		width: 100%;
+		height: 50px;
+		background-color: #afa;
+
+		position: relative;
+	}
+		
+	#add-chord-table{
+		display: none;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+
+		background-color: #aaf;
+		position: absolute;
+		left: 0;
+		top: 0;
+
+		z-index: 1;
+	}
+	.slider-block{
+		padding: 10px 20px;
+
+		display: flex;
+		flex-direction: column;
+	}
+
+#part-chord-table{
+	width: 40%;
+	height: calc(100% - 100px);
+	background-color: #f77;
+	flex-shrink: 0;
+
+	display: flex;
+	flex-wrap: wrap;
+}
+
+	#chord-table{
+		width: 100%;
+		height: calc(100% - 80px);
+		min-height: 70px;
+		background-color: #faa;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+		.chord-block{
+			min-width: 30px;
+			height: 40px;
+			background-color: #afa;
+			margin: 10px;
+			float:left; /* 往左浮动，能让列表横排 */
+
+			overflow: hidden;
+			position: relative;
+			padding: 5px 10px;
+		}
+		.chord-block-ghost{
+			opacity: 0;
+		}
+		.chord-block-progress-bar{
+			position: absolute; 
+			bottom: 0;
+			width: 100%;
+			height: 5px;
+			background-color: white;
+		}
+	#delete{
+		width: 100%;
+		height: 80px;
+		background-color: #aaf;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+		#delete-zone{
+			position: absolute;
+			
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+#part-chord-pic{
+	width: 30%;
+	height: calc(100% - 100px);
+	background-color: #44f;
+	flex-shrink: 0;
+	overflow: hidden;
+}
+	#chord-pic{
+		width: 60%;
+		height: auto;
+		background-color: white;
+	}
+
+#part-music{
+	width: 100%;
+	height: 100px;
+
+	display: flex;
+	flex-direction: column;
+
+	position: relative;
+}
+	#music-hint-cover{
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		color: white;
+		font-size: 20px;
+		background-color: rgba(100, 100, 100, 0.8);
+		z-index: 1;
+
+		transition: background-color 0.3s
+	}
+	#music-hint-cover:hover{
+		background-color: rgba(150, 150, 150, 0.8);
+	}
+	#music-control{
+		width: 100%;
+		height: 40px;
+
+		display: flex;
+		position: relative;
+
+		background-color: #6a3;
+	}
+		#music-name{
+			width: 30%;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			
+
+			line-height: 40px;
+			align-items: center;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+
+
+		#music-button-zone{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			position: absolute;
+		}
+			.music-button{
+				width: 30px;
+				height: 30px;
+				margin: 0 10px;
+			}
+
+	#music-slider-zone{
+		height: 60px;
+		margin: 0 20px;
+
+		background-color: #d5a;
+
+		display: flex;
+		align-items: center;
+		position: relative;
+	}
+		#slider-music{
+			position: relative;
+		}
+		#slider-tick-progress{
+			position: relative;
+			height: 28px;
+			margin: 0 5px;
+		}
+
+
+
+
+
+.flex-center{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.full{
+	width: 100%;
+	height: 100%;
+}
+
+.hide{
+	display: none;
+}
+
+.ef-plus{
+	position: absolute;
+    width: 20px;
+    height: 20px;
+    z-index: 5;
+    font-size: 18px;
+}
+
+.music-button{
+
+}
+
+/* 默认滑动条样式 */
+input[type="range"] {
+	-webkit-appearance: none; /* 移除默认样式 */
+    width: 100%;
+    
+    height: 8px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+input[type=range]:focus { /* 获取焦点后 */
+    outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track { /* 轨道的样式 */
+
+}
+input[type="range"]::-webkit-slider-thumb { /* 滑块的样式 */
+    -webkit-appearance: none; /* 移除默认样式 */
+    background-color: #aaa;
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #666;
+}
