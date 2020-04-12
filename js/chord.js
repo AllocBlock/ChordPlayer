@@ -18,63 +18,40 @@ var chord_audio = [];
 var timeoutId = [];
 var key_map = {
 	"C" : 0,
-    "#C" : 0,
 	"D" : 1,
 	"E" : 2,
 	"F" : 3,
 	"G" : 4,
 	"A" : 5,
 	"B" : 6,
-};
+}
 
 var chord_list = {
 	"C" : [3, 0, 0, 0],
-    "Dm" : [0, 1, 2, 2],
-    "Em" : [2, 3, 4, 0],
 	"F" : [0, 1, 0, 2],
-    "G" : [2, 3, 2, 0],
-    "Am" : [0, 0, 0, 2],
-    "E7" : [2, 0, 2, 1],
-    "Csus4" : [3, 1, 0, 0],
-    "Gsus4" : [2, 3, 3, 0],
-
-    "G" : [2, 3, 2, 0],
-    "Am" : [0, 0, 0, 2],
-    "Bm" : [2, 2, 2, 4],
     "C" : [3, 0, 0, 0],
-    "D" : [0, 2, 2, 2],
-    "Em" : [2, 3, 4, 0],
-    "B7" : [2, 2, 3, 2],
-    "Gsus4" : [2, 3, 3, 0],
-    "Dsus4" : [0, 3, 2, 2],
-
     "F" : [0, 1, 0, 2],
-    "Gm" : [1, 3, 2, 0],
+    "G" : [2, 3, 2, 0],
     "Am" : [0, 0, 0, 2],
-    "bB" : [1, 1, 2, 3],
-    "C" : [3, 0, 0, 0],
-    "Dm" : [0, 1, 2, 2],
-    "A7" : [0, 0, 1, 0],
-    "Fsus4" : [0, 3, 1, 2],
-    "Csus4" : [3, 1, 0, 0],
-
+    "Em" : [2, 3, 4, 0],
+    "D" : [0, 2, 2, 2],
     "A" : [0, 0, 1, 2],
+    "Bm" : [2, 2, 2, 4],
+    "Dm" : [0, 1, 2, 2],
     "B" : [2, 2, 3, 4],
+    "A7" : [0, 0, 1, 0],
+    "Bb" : [1, 1, 2, 3],
     "C7" : [1, 0, 0, 0],
     "D7" : [3, 2, 2, 2],
     "Cm" : [1, 1, 1, 3],
     "E" : [2, 4, 4, 4],
+    "E7" : [2, 0, 2, 1],
     "F7" : [3, 1, 3, 2],
     "Fm" : [3, 1, 0, 1],
     "G7" : [2, 1, 2, 0],
+    "Gm" : [1, 3, 2, 0],
     "bA" : [3, 4, 3, 1],
-};
-
-var chord_group = {
-    "C大调" : ["C", "Dm", "Em", "F", "G", "Am", "E7", "Csus4", "Gsus4"],
-    "G大调" : ["G", "Am", "Bm", "C", "D", "Em", "B7", "Gsus4", "Dsus4"],
-    "F大调" : ["F", "Gm", "Am", "bB", "C", "Dm", "A7", "Fsus4", "Csus4"],
-};
+}
 
 
 
@@ -83,9 +60,10 @@ var arpeggioDown = true;
 var volume = 1.0;
 var musicVolume = 1.0;
 
-var music = null;
+var chordTableSortable;
+var trashSortable;
 
-var currentScale = 1.0;
+var isDragging = false; // 判断是否在拖拽
 
 $(function(){ // 初始化
 	// 音量初始值
@@ -94,6 +72,43 @@ $(function(){ // 初始化
 	// 琶音时间初始值
 	arpeggioTime = $("#slider-arpeggio-time").val();
 
+	// 创建sortable
+	var chordTable = document.getElementById('chord-table');
+	chordTableSortable = new Sortable(chordTable, {
+		group: "chord",
+		animation: 150,
+		ghostClass: "chord-block-ghost", // 出现在列表中的副本添加的class
+		onStart: sortableStart,
+		onEnd: sortableEnd
+	});
+
+	// 创建垃圾箱的sortable
+	var trash = document.getElementById('delete-zone');
+	trashSortable = new Sortable(trash, {
+		group: "chord",
+		onAdd: trashSortableAdd
+	});
+
+	// 添加的和弦列表mouseleave
+	var $addChordTable = $("#add-chord-table");
+	$addChordTable.mouseleave(function(){
+		closeAddChordTable();
+	});
+
+	// 添加的垃圾箱mouseenter和mouseleave
+	var $trashZone = $("#delete");
+	$trashZone.mouseenter(function(){
+        if (!isDragging){
+            $trashZone.stop(true, true).animate({"background-color": "red"}, 100);
+        }
+		
+	});
+	$trashZone.mouseleave(function(){
+        if (!isDragging){ // 在拖拽时，在鼠标移入时却会触发mouseleave，怀疑是bug，因此增加了限定条件
+            $trashZone.stop(true, true).animate({"background-color": "#aaf"}, 100);
+        }
+	});
+
     // 滑动条的初始化
     updateSliderArpeggioTime($("#slider-arpeggio-time").get(0));
     updateSliderVolume($("#slider-volume").get(0));
@@ -101,48 +116,11 @@ $(function(){ // 初始化
     // 加载音频
     loadAudio();
 
-    // 初始化和弦列表
-    initChord();
+    // 
 
-    // 美化和弦列表滚动条
-    $("#chord-table").niceScroll({
-        cursorcolor: "#fff",//#CC0071 光标颜色
-        cursoropacitymax: 0.8, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
-        touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
-        cursorwidth: "5px", //像素光标的宽度
-        cursorborder: "0", // 游标边框css定义
-        cursorborderradius: "5px",//以像素为光标边界半径
-        autohidemode: true //是否隐藏滚动条
-    });
-
-    // 进度条的滚动条
-    $("#music-slider-zone").niceScroll({
-        cursorcolor: "#fff",//#CC0071 光标颜色
-        cursoropacitymax: 0.8, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
-        touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
-        cursorwidth: "10px", //像素光标的宽度
-        cursorborder: "0", // 游标边框css定义
-        cursorborderradius: "10px",//以像素为光标边界半径
-        autohidemode: true //是否隐藏滚动条
-    });
-
-    // 播放进度条，滚轮缩放
-    $('#music-slider-zone').scrollLeft(100); // 移动滚动条到中间
-    $("#music-slider-zone").on('mousewheel DOMMouseScroll', function(event, delta) {
-        if (music != null && event.ctrlKey){
-            //console.log(event);
-            var normalWidth = $("#part-music").width();
-            currentScale += delta/50;
-            currentScale = Math.max(0.2, Math.min(20, currentScale));
-            //console.log("更新缩放", currentScale, currentScale * normalWidth);
-            $("#music-slider-zone-scale").css("width", currentScale * normalWidth);
-
-            // 更新滚动条！
-            // 进度条的滚动条
-            $("#music-slider-zone").getNiceScroll().resize();
-        }
-        event.preventDefault(); // 接管
-            return false;
+    $("chord-block").bind("contextmenu",function(e){
+        showToast("右键菜单");
+        return false;
     });
 });
 
@@ -176,106 +154,83 @@ function audioLoadedCallback(){
     }
 }
 
-/* 初始化和弦列表 */
-function initChord(){
-    var $chordTable = $("#chord-table");
-    for (groupName in chord_group){
-        // 标题
-        $title = $("<div class=\"chord-group flex-center\">{0}</div>".format(groupName));
-        $chordTable.append($title);
-        for(chordName of chord_group[groupName]){
-            // 检查是否有该和弦
-            if (chord_list.hasOwnProperty(chordName)){
-                var $newChord = $("<li class=\"chord-block flex-center\" onclick=\"playChordClick(this, \'{0}\')\">{0}</li>".format(chordName));
-                $newChord.css("opacity", "0.0");
-                $newChord.attr("draggable", "true"); // 可拖动
-                $newChord.attr("ondragstart", "dragStart(event)"); // 拖动开始事件
-                $newChord.attr("ondragend", "dragEnd(event)"); // 拖动结束事件
-                $chordTable.append($newChord);
-                $newChord.animate({opacity: 1.0}, 300, function(){
-                    $newChord.removeAttr("style"); // 关闭和弦按钮渐变动画
-                });
-            }
-            else{
-                alert("未找到和弦" + chordName);
-            }
-        }
-    }
-    
-}
-
-var isDragging = false; // 判断是否在拖拽
-var draggingChrodName = "";
-/* 拖拽开始事件 */
-function dragStart(e){
-    //console.log("开始拖拽", e);
+/* 事件：和弦开始拖拽 */
+function sortableStart(evt){
     isDragging = true;
-    draggingChrodName = $(e.srcElement).text();
-   
-    // 特效
-    if (music != null){
-        $("#mark").stop(true, true).animate({"background-color": "#aaf"}, 100);
-    }
+	$("#delete").stop(true, true).animate({"background-color": "white"}, 200);
+}
+/* 事件：和弦结束拖拽 */
+function sortableEnd(evt){
+    isDragging = false;
+	$("#delete").stop(true, true).animate({"background-color": "#aaf"}, 200);
+}
+/* 事件：和弦拖入垃圾箱 */
+function trashSortableAdd(evt){
+	$(evt.srcElement).remove(); // 销毁和弦块
+	showToast("已删除") // 提示信息
 }
 
-function dragEnd(e){
-    //console.log("拖拽结束");
-    // 特效
-    if (music != null){
-        $("#mark").stop(true, true).animate({"background-color": "#55a"}, 100);
-    }
+/* 事件：品位转索引 */
+function fretToIndex(string, fret){
+	var base;
+	switch(string){
+		case 1: {
+			base = 9;
+			break;
+		}
+		case 2: {
+			base = 4;
+			break;
+		}
+		case 3: {
+			base = 0;
+			break;
+		}
+		case 4: {
+			base = 7;
+			break;
+		}
+		default:{
+			return -1;
+		}
+	}
+	return base + fret;
 }
+/* 音调转索引 */
+function keyToIndex(key){
+	// RE匹配
+	var reg = /([A-Zb#]+)(\d)/;
+	var res = key.match(reg);
+	
+	// 获取音名和组
+	var keyName = res[1];
+	var keyNameIndex = 0;
+	var keyNameCut = keyName;
+	if (keyName.length > 2){ // 有升号
+		throw ('和弦格式错误：' + keyName);
+	}
 
-function dragDrop(e){
-    if (music != null){
-        console.log("放置标记" + draggingChrodName);
-        addMark(draggingChrodName, $("#slider-music").val());
-    }
-    else{
-        showToast("请先加载音乐！");
-    }
+	if (keyName.indexOf('#') != -1){ // 有升号
+		keyNameIndex = 1;
+		var keyNameCut = keyNameCut.replace('#', ''); // 去除#
+	}
+	else if (keyName.indexOf('b') != -1){ // 有降号
+		keyNameIndex = -1;
+		var keyNameCut = keyNameCut.replace('b', ''); // 去除b
+	}
+	keyNameIndex = keyNameIndex + key_map[keyNameCut];
+
+	var group = res[2].charCodeAt() - '0'.charCodeAt();
+
+	// 计算索引，C4对应索引0
+	var index = (group - 4) * 7 + keyNameIndex;
+
+	// 防止越界
+	index = Math.max(0, Math.min(24, index));
+
+	// 返回
+	return index;
 }
-
-function allowDrop(e){
-    e.preventDefault();
-}
-
-
-function addMark(chordName, timeTick){
-    var $markTable = $("#music-mark-table");
-
-    var $mark = $("<div class=\"music-mark flex-center\">{0}</div>".format(chordName));
-
-    // 放置标记
-    var musicLen = music.duration;
-    $markTable.append($mark); // 先添加，否则不会渲染
-
-    
-    //var markHieght = $mark.innerHeight();
-    var $scaler = $("#music-slider-zone-scale");
-    var barWidth = $scaler.width();
-    
-    // 需要考虑滑块的宽度，以及容器的padding
-    
-    var thumbWidth = 18;
-    var scale = (barWidth - thumbWidth) / barWidth;
-    //var base = $scaler.width() * (timeTick/musicLen) * scale;
-
-    var markWidth = $mark.innerWidth();
-
-    var padding = ($scaler.innerWidth() - $scaler.width()) / 2;
-    console.log(padding);
-    //var left = base - markWidth/2 + thumbWidth/2 + padding;
-    var left = "calc({0}% - p" // todo
-    var top = 10;
-
-    $mark.css("left", left);
-    $mark.css("top", top);
-
-    
-}
-
-
 
 /* 播放音调 */
 function playKey(string, fret){
@@ -288,34 +243,6 @@ function playKey(string, fret){
 		audio.play();
 	});
 }
-
-/* 事件：品位转索引 */
-function fretToIndex(string, fret){
-    var base;
-    switch(string){
-        case 1: {
-            base = 9;
-            break;
-        }
-        case 2: {
-            base = 4;
-            break;
-        }
-        case 3: {
-            base = 0;
-            break;
-        }
-        case 4: {
-            base = 7;
-            break;
-        }
-        default:{
-            return -1;
-        }
-    }
-    return base + fret;
-}
-
 /* 播放和弦 */
 function playChord(chordName){
     // 检查和弦是否存在，然后播放
@@ -342,7 +269,53 @@ function playChord(chordName){
 	}
 }
 
+/* 添加和弦 */
+function addChord(chordName){
+    // 检查是否有该和弦
+    if (chord_list.hasOwnProperty(chordName)){
+        var $newChord = $("<li class=\"chord-block flex-center\" onclick=\"playChordClick(this, \'" + chordName + "\')\">" + chordName + "</li>");
+        $newChord.css("opacity", "0.0");
 
+        var $chordTable = $("#chord-table");
+        $chordTable.append($newChord);
+        $newChord.animate({opacity: 1.0}, 300, function(){
+            $newChord.removeAttr("style"); // 关闭和弦按钮渐变动画
+        });
+        return true;
+    }
+    else{
+        alert("未找到和弦" + chordName);
+        return false;
+    }
+}
+/* 清空所有和弦 */
+function deleteAllChord(){
+    var $chordTable = $("#chord-table");
+    $chordTable.empty();
+}
+/* 显示和弦列表 */
+function showAddChordTable(){
+    console.log("打开和弦列表");
+    var $addChordTable = $("#add-chord-table");
+    $addChordTable.css("opacity", "0");
+    $addChordTable.stop(false, true).animate({opacity: 1}, 200);
+    $addChordTable.show();
+}
+/* 关闭和弦列表 */
+var isClosing = false;
+function closeAddChordTable(){
+    var $addChordTable = $("#add-chord-table");
+    if (!isClosing && $addChordTable.css("display") != "none"){
+        console.log("关闭和弦列表");
+        isClosing = true;
+        
+        $addChordTable.css("opacity", "1");
+        $addChordTable.stop(false, true).animate({opacity: 0}, 500, function(){
+            $addChordTable.hide();
+            isClosing = false;
+        });
+    }
+}
 
 /* 显示气泡提示 */
 function showToast(text, duration = 1.0){
@@ -351,7 +324,7 @@ function showToast(text, duration = 1.0){
     $toast.text(text);
     $toast.css("opacity", "0");
     $toast.css("display", "flex");
-    $toast.animate({opacity: 1}, 50);
+    $toast.animate({opacity: 1}, 100);
     $toast.animate({"null":1}, duration*1000); // 无意义动画，避免使用delay无法取消的问题
     $toast.animate({opacity: 0}, 300);
 }
@@ -368,6 +341,7 @@ function drawChordPic(chordName){
     var pen = canvas.getContext('2d');
 
     pen.clearRect(0, 0, width, height);
+
 
     var left = 50, right = width - 50, top = 100, bottom = height - 50;
     var stringCount = 4;
@@ -464,6 +438,52 @@ function playChordClick(button, chordName){
     drawChordPic(chordName);
 }
 
+/* 按钮事件：添加和弦 */
+function addChordClick(button, chordName){
+    if (addChord(chordName)){
+        // 特效
+        // 1. 符号上飘
+        var $floatSymbol = $("<div class=\"ef-plus\">+</div>");
+        var buttonWidth = $(button).innerWidth();
+        $floatSymbol.css("left", $(button).offset().left).css("left", "+={0}px".format(buttonWidth));
+        $floatSymbol.css("top", $(button).offset().top);
+        $(document.body).append($floatSymbol);
+        $floatSymbol.animate({top: "-=20px", opacity: 0}, 500, function(){
+            $floatSymbol.remove();
+        });
+    }
+}
+
+/* 按钮事件：打开和弦列表 */
+function chordListClick(){
+	// 动态生成列表
+	var $addChordTable = $("#add-chord-table");
+	$addChordTable.empty();
+	// 关闭按钮
+	var $closeButton = $("<li class=\"chord-block flex-center\" onclick=\"closeAddChordTable()\"></li>");
+	$closeButton.css("font-size", "18px");
+	$closeButton.css("background-color", "#faa");
+    $closeButton.css("width", "calc(100% - 40px)");
+    $closeButton.append("<embed src=\"imgs/cross.svg\" type=\"image/svg+xml\"/>")
+	$addChordTable.append($closeButton);
+
+	// 和弦列表
+	for (chordName in chord_list){
+		var $newChord = $("<li class=\"chord-block flex-center\" onclick=\"addChordClick(this, \'" + chordName + "\')\">" + chordName + "</li>");
+		$addChordTable.append($newChord);
+	}
+	// 显示
+	showAddChordTable();
+}
+/* 按钮事件：清空所有和弦 */
+function deleteAllChordClick(){
+    if (confirm("要清空所有和弦吗？")){
+        deleteAllChord();
+        showToast("已清空所有和弦");
+    }
+}
+
+
 /* 显示音乐播放器加载提示 */
 function showMusicCover(){
     $("#music-hint-cover").show();
@@ -482,7 +502,7 @@ function secondToTick(second){
     return "{0}:{1}".format((minute).toString().padStart(2, '0'), (second).toString().padStart(2, '0'));
 }
 
-
+var music = null;
 /* 加载音乐 */
 function loadMusic(){
     $fileInput = $("<input type=\"file\">");
@@ -518,14 +538,11 @@ function loadMusic(){
                 $("#slider-music").css('background', bgRaw.format(sliderFrontColor, (cTime/music.duration)*100));
             }
             music.load();
-
-            
             
         }
         reader.readAsDataURL(file);
         // music.onloadeddata = musicLoadedCallback; // 加载完成的回调
         // music.load();
-
     })
 }
 
@@ -588,7 +605,6 @@ function updateSliderVolume(slider){
 
 var isMusicSliderMoving = false;
 var isPlayBeforeMoving = false;
-
 /* 更新事件：音乐进度条 */
 function updateMusicSlider(slider){
     if (!isMusicSliderMoving){ // 刚开始拖拽时停止音乐
@@ -624,6 +640,7 @@ function updateMusicSliderAuto(){
         // 更新文本
         $("#slider-tick").text(secondToTick(cTime));
     }
+    
 }
 
 setInterval(updateMusicSliderAuto, 200);

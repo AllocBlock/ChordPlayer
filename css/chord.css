@@ -58,7 +58,7 @@ embed{
 
 #part-panel {
 	width: 30%;
-	height: calc(100% - 150px);
+	height: calc(100% - 100px);
 	background-color: #fa7;
 	flex-shrink: 0;
 
@@ -66,6 +66,14 @@ embed{
 	display: flex;
 	flex-direction: column;
 }
+	#button-add-chord{
+		width: 100%;
+		height: 50px;
+		background-color: #afa;
+
+		position: relative;
+	}
+		
 	#add-chord-table{
 		display: none;
 		width: 100%;
@@ -88,13 +96,12 @@ embed{
 
 #part-chord-table{
 	width: 40%;
-	height: calc(100% - 150px);
+	height: calc(100% - 100px);
 	background-color: #f77;
 	flex-shrink: 0;
 
 	display: flex;
 	flex-wrap: wrap;
-
 }
 
 	#chord-table{
@@ -104,25 +111,14 @@ embed{
 		background-color: #faa;
 		margin: 0;
 		padding: 0;
-		overflow-y: scroll;
+		overflow: hidden;
 	}
 
-		.chord-group{
-			width: calc(100% - 30px);
-			height: 20px;
-			background-color: #2f6;
-			margin: 5px;
-			float:left; /* 往左浮动，能让列表横排 */
-
-			overflow: hidden;
-			position: relative;
-			padding: 5px 10px;
-		}
 		.chord-block{
 			min-width: 30px;
 			height: 40px;
 			background-color: #afa;
-			margin: 5px;
+			margin: 10px;
 			float:left; /* 往左浮动，能让列表横排 */
 
 			overflow: hidden;
@@ -139,7 +135,7 @@ embed{
 			height: 5px;
 			background-color: white;
 		}
-	#mark{
+	#delete{
 		width: 100%;
 		height: 80px;
 		background-color: #aaf;
@@ -148,7 +144,7 @@ embed{
 		justify-content: center;
 		align-items: center;
 	}
-		#mark-zone{
+		#delete-zone{
 			position: absolute;
 			
 			width: 100%;
@@ -158,7 +154,7 @@ embed{
 
 #part-chord-pic{
 	width: 30%;
-	height: calc(100% - 150px);
+	height: calc(100% - 100px);
 	background-color: #44f;
 	flex-shrink: 0;
 	overflow: hidden;
@@ -171,7 +167,7 @@ embed{
 
 #part-music{
 	width: 100%;
-	height: 150px;
+	height: 100px;
 
 	display: flex;
 	flex-direction: column;
@@ -194,7 +190,7 @@ embed{
 	}
 	#music-control{
 		width: 100%;
-		height: 60px;
+		height: 40px;
 
 		display: flex;
 		position: relative;
@@ -205,9 +201,10 @@ embed{
 			width: 30%;
 			height: 100%;
 			position: absolute;
-			left: 10px;
+			left: 0;
 			
-			line-height: 50px;
+
+			line-height: 40px;
 			align-items: center;
 			text-overflow: ellipsis;
 			white-space: nowrap;
@@ -226,60 +223,25 @@ embed{
 				height: 30px;
 				margin: 0 10px;
 			}
-			.music-button-seperater{
-				width: 3px;
-				height: 40px;
-				background-color: white;
-				margin: 0px 5px;
-			}
 
 	#music-slider-zone{
-		height: 100px;
+		height: 60px;
 		margin: 0 20px;
 
 		background-color: #d5a;
-		position: relative;
-		overflow-x: scroll;
-	}
-		#music-slider-zone-scale{
-			position:absolute;
-			width: 100%;
-			height: 100%;
-			left: 0;
-			top: 0;
-			padding: 0 100px;
-		}
-			#music-mark-table{
-				width: 100%;
-				height: 100%;
-				position: absolute;
-			}
-				.music-mark{
-					width: auto;
-					height: 20px;
-					position: absolute;
-					border-radius: 10px;
 
-					background-color: black;
-					color: white;
-					font-size: 8px;
-					padding: 0 5px;
-				}
-			
-			#slider-music{
-				position: relative;
-			}
-			#slider-tick-progress{
-				position: relative;
-				height: 28px;
-				margin: 0 5px;
-			}
-			.slider-padding{
-				position: relative;
-				width: 100px;
-				height: 100%;
-				background-color: #16c;
-			}
+		display: flex;
+		align-items: center;
+		position: relative;
+	}
+		#slider-music{
+			position: relative;
+		}
+		#slider-tick-progress{
+			position: relative;
+			height: 28px;
+			margin: 0 5px;
+		}
 
 
 

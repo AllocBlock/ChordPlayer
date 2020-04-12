@@ -3,12 +3,11 @@
 	<head>
 		<meta charset="utf-8">
 		<title>和弦播放器~</title>
-		<link rel="stylesheet" type="text/css" href="css/musicMark.css">
+		<link rel="stylesheet" type="text/css" href="css/chord.css">
 		<script src="js/jquery-3.4.1.js"></script>
 		<script src="js/jquery.color-2.1.2.js"></script>
-		<script src="js/jquery.nicescroll.js"></script>
 		<script src="js/Sortable.js"></script>
-		<script src="js/musicMark.js"></script>
+		<script src="js/chord.js"></script>
 	</head>
 	<body>
 		<div id="loading" class="flex-center">加载中</div>
@@ -18,6 +17,9 @@
 		<!-- 主体 -->
 		<div id="body">
 			<div id="part-panel">
+				<div id="button-add-chord" class="flex-center" onclick="chordListClick()">
+                    <embed src="imgs/add.svg" type="image/svg+xml"/>
+                </div>
 				<ul id="add-chord-table"></ul>
 
 				<div class="slider-block">
@@ -33,13 +35,20 @@
 			</div>
 
 			<div id="part-chord-table">
-				<ul id="chord-table"></ul>
-				<div id="mark" ondrop="dragDrop(event)" ondragover="allowDrop(event)">
+				<ul id="chord-table">
+					<li class="chord-block flex-center" onclick="playChordClick(this, 'C')">C</li>
+					<li class="chord-block flex-center" onclick="playChordClick(this, 'F')">F</li>
+				</ul>
+				<!-- <div id="mark">
 					<div id="mark-zone"></div>
 					<embed src="imgs/mark.svg" type="image/svg+xml"/>
+				</div> -->
+				<div id="delete">
+					<div id="delete-zone" onclick="deleteAllChordClick()"></div>
+					<embed src="imgs/trash.svg" type="image/svg+xml"/>
 				</div>
+
 			</div>
-			
 
 			<div id="part-chord-pic" class="flex-center">
 				<canvas id="chord-pic" height="500px" width="300px">你的浏览器不支持canvas绘图！</canvas>
@@ -50,36 +59,26 @@
 				<div id="music-control">
 					<div id="music-name">未加载</div>
 					<div id="music-button-zone" class="flex-center">
-						<div class="music-button" onclick="resumeMusic()">
+						<div id="music-button-play" class="music-button" onclick="resumeMusic()">
 							<embed src="imgs/play.svg" type="image/svg+xml"/>
 						</div>
-						<div class="music-button" onclick="pauseMusic()">
+						<div id="music-button-pause" class="music-button" onclick="pauseMusic()">
 							<embed src="imgs/pause.svg" type="image/svg+xml"/>
 						</div>
-						<div class="music-button" onclick="stopMusic()">
+						<div id="music-button-stop" class="music-button" onclick="stopMusic()">
 							<embed src="imgs/stop.svg" type="image/svg+xml"/>
-						</div>
-						<div class="music-button-seperater"></div>
-						<div class="music-button" onclick="stopMusic()">
-							<embed src="imgs/stop.svg" type="image/svg+xml"/>
-						</div>
-						<div class="music-button" onclick="stopMusic()">
-							<embed src="imgs/stop.svg" type="image/svg+xml"/>
-						</div>
-						<div class="music-button" onclick="stopMusic()">
-							<embed src="imgs/stop.svg" type="image/svg+xml"/>
-						</div>
-						<div id="slider-tick-progress" class="flex-center">
-							<div id="slider-tick">00:00</div>
-							<div id="slider-seperate">/</div>
-							<div id="slider-length">00:00</div>
 						</div>
 					</div>
 				</div>
-				<div id="music-slider-zone" class="flex-center">
-					<div id="music-slider-zone-scale" class="flex-center">
-						<div id="music-mark-table"></div>
-						<input id="slider-music" type="range" min="0" max="0" step="0.1" oninput="updateMusicSlider(this)" onchange="doneMusicSlider(this)" />
+				<div id="music-slider-zone">
+					<div id="music-marker">
+					
+					</div>
+					<input id="slider-music" type="range" min="0" max="0" step="0.1" oninput="updateMusicSlider(this)" onchange="doneMusicSlider(this)" />
+					<div id="slider-tick-progress" class="flex-center">
+						<div id="slider-tick">00:00</div>
+						<div id="slider-seperate">/</div>
+						<div id="slider-length">00:00</div>
 					</div>
 				</div>
 			</div>
