@@ -31,12 +31,17 @@
 
 				<div class="slider-block">
 					<div id="text-arpeggio-time" class="flex-center">加载中...</div>
-					<input id="slider-arpeggio-time" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderArpeggioTime(this)" class="slider-default"/>
+					<input id="slider-arpeggio-time" type="range" min="0" max="1.0" step="0.01" value="0.15" oninput="updateSliderArpeggioTime(this)" class="slider-default"/>
 				</div>
 
 				<div class="slider-block">
-					<div id="text-volume" class="flex-center">- 音量 -</div>
+					<div id="text-volume" class="flex-center">加载中...</div>
 					<input id="slider-volume" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderVolume(this)" class="slider-default" />
+				</div>
+
+				<div class="slider-block">
+					<div id="text-capo" class="flex-center">加载中...</div>
+					<input id="slider-capo" type="range" min="0" max="12" value="0" oninput="updateSliderCapo(this)" class="slider-default" />
 				</div>
 				
 			</div>
@@ -58,26 +63,19 @@
 				<div id="music-hint-cover" class="flex-center" onclick="loadMusic()">点击加载音乐~</div>
 				<div id="music-control">
 					<div id="music-name">未加载</div>
-					<div id="music-button-zone" class="flex-center">
-						<div class="music-button" onclick="resumeMusic()">
+					<div class="music-button-zone flex-center">
+						<div class="music-button flex-center" onclick="resumeMusic()">
 							<embed src="imgs/play.svg" type="image/svg+xml"/>
 						</div>
-						<div class="music-button" onclick="pauseMusic()">
+						<div class="music-button flex-center" onclick="pauseMusic()">
 							<embed src="imgs/pause.svg" type="image/svg+xml"/>
 						</div>
-						<div class="music-button" onclick="stopMusic()">
+						<div class="music-button flex-center" onclick="stopMusic()">
 							<embed src="imgs/stop.svg" type="image/svg+xml"/>
 						</div>
+
 						<div class="music-button-seperater"></div>
-						<div class="music-button" onclick="stopMusic()">
-							<embed src="imgs/stop.svg" type="image/svg+xml"/>
-						</div>
-						<div class="music-button" onclick="stopMusic()">
-							<embed src="imgs/stop.svg" type="image/svg+xml"/>
-						</div>
-						<div class="music-button" onclick="stopMusic()">
-							<embed src="imgs/stop.svg" type="image/svg+xml"/>
-						</div>
+						
 						<div id="slider-tick-progress" class="flex-center">
 							<div id="slider-tick">00:00</div>
 							<div id="slider-seperate">/</div>
@@ -85,6 +83,27 @@
 						</div>
 
 						<input id="slider-music-volume" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderMusicVolume(this)" class="slider-default"/>
+						
+
+					</div>
+					<div class="music-button-zone flex-center">
+						<div class="music-button flex-center" onclick="prevMark()">
+							<embed src="imgs/prevArrow.svg" type="image/svg+xml"/>
+						</div>
+						<div class="music-button flex-center" onclick="nextMark()">
+							<embed src="imgs/nextArrow.svg" type="image/svg+xml"/>
+						</div>
+						<div class="music-button flex-center" onclick="deleteAllMark()">
+							<embed src="imgs/trash.svg" type="image/svg+xml"/>
+						</div>
+
+						<div class="music-button-seperater"></div>
+
+						<div class="music-button flex-center" onclick="loadMusic()">
+							<embed src="imgs/file.svg" type="image/svg+xml"/>
+						</div>
+						
+						
 					</div>
 				</div>
 				<div id="music-slider-zone">
