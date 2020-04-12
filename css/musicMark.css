@@ -142,7 +142,7 @@ embed{
 	#mark{
 		width: 100%;
 		height: 80px;
-		background-color: #aaf;
+		background-color: #55a;
 		position: relative;
 		display: flex;
 		justify-content: center;
@@ -232,6 +232,10 @@ embed{
 				background-color: white;
 				margin: 0px 5px;
 			}
+			#slider-music-volume{
+				margin: 0;
+				width: 80px;
+			}
 
 	#music-slider-zone{
 		height: 100px;
@@ -239,17 +243,29 @@ embed{
 
 		background-color: #d5a;
 		position: relative;
-		overflow-x: scroll;
+
+		display: flex;
+		flex-wrap: nowrap;
 	}
+		.music-slider-blank{
+			pointer-events: none;
+			position: relative;
+			background-color: transparent;
+			width: 100px;
+			height: 100%;
+			flex-shrink: 0;
+		}
 		#music-slider-zone-scale{
-			position:absolute;
+			position:relative;
 			width: 100%;
 			height: 100%;
 			left: 0;
 			top: 0;
-			padding: 0 100px;
+			flex-shrink: 0;
+			
 		}
 			#music-mark-table{
+				pointer-events: none;
 				width: 100%;
 				height: 100%;
 				position: absolute;
@@ -264,11 +280,89 @@ embed{
 					color: white;
 					font-size: 8px;
 					padding: 0 5px;
+
+					pointer-events: all; /* 父物体取消了，但可以单独设置子物体！*/
 				}
-			
-			#slider-music{
-				position: relative;
+					.music-mark-pin{
+						pointer-events: none;
+						width: 2px;
+						height: 50px;
+						position: absolute;
+						left: calc(50% - 1px);
+						top: 20px;
+						background-color: blue;
+						opacity: 0.3;
+					}
+				#mark-context{
+					position: absolute;
+					width: 120px;
+					z-index: 8;
+					font-size: 14px;
+					opacity: 0.5;
+				}
+					#mark-context-div{
+						width: 100%;
+						height: 100%;
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						background-color: #62d51a;
+						border-radius: 20px;
+						overflow: hidden;
+					}
+
+						#mark-context-title{
+							width: 80%;
+							height: 30px;
+							color: white;
+							font-weight: bold;
+							margin: 5px 0;
+						}
+						#mark-context-sperator{
+							background-color: white;
+							width: 80%;
+							margin: 0 10%;
+							height: 2px;
+							border-radius: 2px;
+						}
+						#mark-context-name{
+							width: 80%;
+							height: 40px;
+							font-size: 20px;
+							font-style: italic;
+							margin: 5px 0;
+						}
+						#mark-context-locate{
+							width: 80%;
+							height: 30px;
+							border-radius: 10px;
+							background-color: #9f9;
+							transition: background-color 0.3s;
+							margin: 5px 0;
+						}
+						#mark-context-locate:hover{
+							background-color: white;
+						}
+						#mark-context-delete{
+							width: 80%;
+							height: 30px;
+							border-radius: 10px;
+							background-color: red;
+							transition: background-color 0.3s;
+							margin: 5px 0;
+						}
+						#mark-context-delete:hover{
+							background-color: white;
+						}
+				
+
+			#music-waveform{
+				pointer-events: none;
+				position: absolute;
+				width: 100%;
+				height: 100%;
 			}
+			
 			#slider-tick-progress{
 				position: relative;
 				height: 28px;
@@ -313,7 +407,7 @@ embed{
 }
 
 /* 默认滑动条样式 */
-input[type="range"] {
+.slider-default {
 	-webkit-appearance: none; /* 移除默认样式 */
     width: 100%;
     
@@ -321,13 +415,13 @@ input[type="range"] {
     margin: 10px 0;
     border-radius: 4px;
 }
-input[type=range]:focus { /* 获取焦点后 */
+.slider-default:focus { /* 获取焦点后 */
     outline: none;
 }
-input[type=range]::-webkit-slider-runnable-track { /* 轨道的样式 */
+.slider-default::-webkit-slider-runnable-track { /* 轨道的样式 */
 
 }
-input[type="range"]::-webkit-slider-thumb { /* 滑块的样式 */
+.slider-default::-webkit-slider-thumb { /* 滑块的样式 */
     -webkit-appearance: none; /* 移除默认样式 */
     background-color: #aaa;
     width: 18px;
@@ -336,6 +430,28 @@ input[type="range"]::-webkit-slider-thumb { /* 滑块的样式 */
     cursor: pointer;
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
+.slider-default::-webkit-slider-thumb:hover {
     background: #666;
+}
+
+/* 播放进度条样式 */
+#slider-music {
+	position: relative;
+
+	-webkit-appearance: none; /* 移除默认样式 */
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: transparent;
+}
+#slider-music:focus { /* 获取焦点后 */
+    outline: none;
+}
+#slider-music::-webkit-slider-thumb { /* 滑块的样式 */
+    -webkit-appearance: none; /* 移除默认样式 */
+    background-color: white;
+    width: 2px;
+    height: 70px;
+    border-radius: 0;
+    opacity: 0.5;
 }

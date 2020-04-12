@@ -7,13 +7,22 @@
 		<script src="js/jquery-3.4.1.js"></script>
 		<script src="js/jquery.color-2.1.2.js"></script>
 		<script src="js/jquery.nicescroll.js"></script>
-		<script src="js/Sortable.js"></script>
+		<script src="js/jquery.mousewheel.js"></script>
 		<script src="js/musicMark.js"></script>
 	</head>
 	<body>
 		<div id="loading" class="flex-center">加载中</div>
 		<div id="toast-contain" class="flex-center full">
 			<div id="toast" class="flex-center hide"></div>
+		</div>
+		<div id="mark-context" style="display: none;">
+			<div id="mark-context-div">
+				<div id="mark-context-title" class="flex-center">当前标记</div>
+				<div id="mark-context-sperator"></div>
+				<div id="mark-context-name" class="flex-center">和弦名称</div>
+				<div id="mark-context-locate" class="flex-center" onclick="markLocateClick()">定位到这里</div>
+				<div id="mark-context-delete" class="flex-center" onclick="markDeleteClick()">删除</div>
+			</div>
 		</div>
 		<!-- 主体 -->
 		<div id="body">
@@ -22,12 +31,12 @@
 
 				<div class="slider-block">
 					<div id="text-arpeggio-time" class="flex-center">加载中...</div>
-					<input id="slider-arpeggio-time" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderArpeggioTime(this)"/>
+					<input id="slider-arpeggio-time" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderArpeggioTime(this)" class="slider-default"/>
 				</div>
 
 				<div class="slider-block">
 					<div id="text-volume" class="flex-center">- 音量 -</div>
-					<input id="slider-volume" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderVolume(this)"/>
+					<input id="slider-volume" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderVolume(this)" class="slider-default" />
 				</div>
 				
 			</div>
@@ -74,13 +83,18 @@
 							<div id="slider-seperate">/</div>
 							<div id="slider-length">00:00</div>
 						</div>
+
+						<input id="slider-music-volume" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderMusicVolume(this)" class="slider-default"/>
 					</div>
 				</div>
-				<div id="music-slider-zone" class="flex-center">
+				<div id="music-slider-zone">
+					<div class="music-slider-blank"></div>
 					<div id="music-slider-zone-scale" class="flex-center">
+						<canvas id="music-waveform" width="30000" height="50"></canvas>
+						<input id="slider-music" type="range" min="0" max="0" step="0.01" oninput="updateMusicSlider(this)" onchange="doneMusicSlider(this)" />
 						<div id="music-mark-table"></div>
-						<input id="slider-music" type="range" min="0" max="0" step="0.1" oninput="updateMusicSlider(this)" onchange="doneMusicSlider(this)" />
 					</div>
+					<div class="music-slider-blank"></div>
 				</div>
 			</div>
 		</div>
