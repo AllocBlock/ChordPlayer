@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>音乐播放器~</title>
+		<link rel="stylesheet" type="text/css" href="css/musicPlayer.css">
+		<script src="js/jquery-3.4.1.js"></script>
+		<script src="js/jquery.color-2.1.2.js"></script>
+		<script src="js/jquery.nicescroll.js"></script>
+		<script src="js/jquery.mousewheel.js"></script>
+		<script src="js/musicPlayer.js"></script>
+	</head>
+	<body>
+		<div id="toast-contain" class="flex-center full">
+			<div id="toast" class="flex-center hide"></div>
+		</div>
+		<div id="mark-context" style="display: none;">
+			<div id="mark-context-div">
+				<div id="mark-context-name-zone" class="flex-center">
+					<input type="text" id="mark-context-name" onchange="updateMarkName(this)" maxlength="10"/>
+				</div>
+				<div id="mark-context-locate" class="flex-center" onclick="markLocateClick()">定位到这里</div>
+				<div id="mark-context-delete" class="flex-center" onclick="markDeleteClick()">删除</div>
+			</div>
+		</div>
+		<!-- 主体 -->
+		<div id="body">
+			<div id="part-music">
+				<div id="music-hint-cover" class="flex-center" onclick="selectMusic()">点击加载音乐~</div>
+				<div id="music-header" class="flex-center">
+					<div id="music-button-file" class="music-button flex-center" onclick="selectMusic()">
+						<embed src="imgs/file.svg" type="image/svg+xml"/>
+					</div>
+					<div id="music-name">未加载</div>
+				</div>
+				<div id="music-visualize" class="flex-center">
+					<embed src="imgs/music.svg" type="image/svg+xml"/>
+				</div>
+				
+				<div id="music-control">
+					<div class="music-button-zone flex-center">
+						<div class="music-button flex-center" onclick="addMark()">
+							<embed src="imgs/add.svg" type="image/svg+xml"/>
+						</div>
+						<div class="music-button flex-center" onclick="prevMark()">
+							<embed src="imgs/prevArrow.svg" type="image/svg+xml"/>
+						</div>
+						<div class="music-button flex-center" onclick="nextMark()">
+							<embed src="imgs/nextArrow.svg" type="image/svg+xml"/>
+						</div>
+						<div class="music-button flex-center" onclick="deleteAllMark()">
+							<embed src="imgs/trash.svg" type="image/svg+xml"/>
+						</div>
+
+						<div class="music-button-seperater"></div>
+
+						<div class="music-button-with-text flex-center" onclick="toggleMuteMusic()">
+							<embed id="music-volume-icon" src="imgs/volume.svg" type="image/svg+xml"/>
+							<embed id="music-mute-icon" src="imgs/muted.svg" type="image/svg+xml" class="hide"/>
+							<div id="music-volume-text" class="flex-center">50%</div>
+						</div>
+						<input id="slider-music-volume" type="range" min="0" max="1.0" step="0.01" oninput="updateSliderMusicVolume(this)" class="slider-default"/>
+
+						<div class="music-button-with-text flex-center" onclick="resetMusicSpeed()">
+							<embed src="imgs/speed.svg" type="image/svg+xml"/>
+							<div id="music-speed-text" class="flex-center">×1.0</div>
+						</div>
+						<input id="slider-music-speed" type="range" min="1" max="10" value="6" oninput="updateSliderMusicSpeed(this)" class="slider-default"/>
+						
+						
+						<label class="switch">
+						  	<input type="checkbox" onchange="updateFollowSwitch(this)">
+						  	<span class="slider"></span>
+						  	<div id="music-follow-text" class="flex-center">跟随关</div>
+						</label>
+					</div>
+					<div id="music-slider-zone">
+						<div class="music-slider-blank"></div>
+						<div id="music-slider-zone-scale" class="flex-center">
+							<canvas id="music-waveform" width="30000" height="50"></canvas>
+							<input id="slider-music" type="range" min="0" max="0" step="0.01" oninput="updateMusicSlider(this)" onchange="doneMusicSlider(this)" />
+							<div id="music-mark-table"></div>
+						</div>
+						<div class="music-slider-blank"></div>
+					</div>
+					<div class="music-button-zone flex-center">
+						<div class="music-button flex-center" onclick="togglePlayMusic()">
+							<embed id="music-play-icon" src="imgs/play.svg" type="image/svg+xml"/>
+							<embed id="music-pause-icon" src="imgs/pause.svg" type="image/svg+xml" class="hide" />
+						</div>
+						<div class="music-button flex-center" onclick="stopMusic()">
+							<embed src="imgs/stop.svg" type="image/svg+xml"/>
+						</div>
+
+						
+						<div id="slider-tick-progress" class="flex-center">
+							<div id="slider-tick">00:00</div>
+							<div id="slider-seperate">/</div>
+							<div id="slider-length">00:00</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+	</body>
+</html>

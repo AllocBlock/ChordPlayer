@@ -1,0 +1,447 @@
+html, body{
+	width: 100%;
+	height: 100%;
+	min-height: 200px;
+	min-width: 600px;
+
+	padding: 0;
+	margin: 0;
+	background-color: #a88;
+	position: relative;
+	color: white;
+	font-family: "微软雅黑";
+
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+embed{
+	width: 25px;
+	height: 25px;
+	pointer-events: none;
+}
+
+::selection{
+	background-color: rgb(51,61,80);
+	color: white;
+}
+
+#body{
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#toast-contain{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	z-index: 10;
+	pointer-events: none; /* 不阻挡所有点击事件 */
+}
+	#toast{
+		display: none;
+
+		height: 30px;
+		min-width: 60px;
+		background-color: #511;
+		border-radius: 25px;
+		padding: 5px 30px;
+	}
+
+#part-music{
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+
+	position: absolute;
+}
+	#music-hint-cover{
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		color: #fdf9e0;
+		font-size: 24px;
+		background-color: rgba(80, 80, 80, 0.8);
+		z-index: 1;
+		transition: background-color 0.3s, color 0.3s
+	}
+	#music-hint-cover:hover{
+		background-color: rgba(100, 100, 100, 0.8);
+		color: #ffddd3;
+	}
+
+	#music-header{
+		flex-shrink: 0;
+		width: 100%;
+		height: 40px;
+		top: 0px;
+		font-size: 20px;
+
+		background-color: #bb9a66;
+		overflow: hidden;
+	}
+		#music-button-file{
+			margin: 0;
+			position: absolute;
+			width: 100%;
+			background-color: #aaa;
+			opacity: 0;
+			transition: opacity 0.3s;
+		}
+		#music-header:hover #music-button-file{
+			opacity: 0.7;
+		}
+
+	#music-visualize{
+		width: 100%;
+		height: calc(100% - 220px);
+		background-color: ff625a;
+	}
+		#music-visualize embed{
+			height: 60%;
+			width: auto;
+		}
+	
+	#music-control{
+		flex-shrink: 0;
+		width: 100%;
+
+		display: flex;
+		flex-wrap: wrap;
+		color: #ffddd3;
+		font-size: 12px;
+
+		background-color: #24414a;
+	}
+		
+		.music-button-zone{
+			width: 100%;
+			height: 40px;
+			overflow: hidden;
+
+			flex-wrap: nowrap;
+		}
+			.music-button{
+				width: 40px;
+				height: 40px;
+				margin: 0 5px;
+
+				position: relative;
+			}
+			.music-button-with-text{
+				width: 40px;
+				height: 40px;
+				margin: 0 5px;
+
+				position: relative;
+			}
+				.music-button-with-text embed{
+					pointer-events: none;
+					position: absolute;
+					width: 20px;
+					height: 20px;
+					top: 4px;
+					
+				}
+				.music-button-with-text div{
+					pointer-events: none;
+					position: absolute;
+					width: 100%;
+					height: 12px;
+					bottom: 0;
+				}
+			.music-button-seperater{
+				width: 2px;
+				height: 80%;
+				border-radius: 4px;
+				background-color: white;
+				margin: 0px 5px;
+			}
+		#slider-music-volume{
+			position: relative;
+			width: 100px;
+		}
+		#slider-music-speed{
+			position: relative;
+			width: 100px;
+		}
+	#music-slider-zone{
+		position: relative;
+		width: calc(100% - 40px);
+		height: 100px;
+		margin: 0 20px;
+
+		display: flex;
+		flex-wrap: nowrap;
+	}
+		.music-slider-blank{
+			pointer-events: none;
+			position: relative;
+			background-color: transparent;
+			width: 100px;
+			height: 100%;
+			flex-shrink: 0;
+		}
+		#music-slider-zone-scale{
+			position:relative;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			flex-shrink: 0;
+			
+		}
+			#music-mark-table{
+				pointer-events: none;
+				width: calc(100% - 2px); /* 减去滑块宽度，避免百分比缩放导致的细微错位 */
+				height: 100%;
+				position: absolute;
+			}
+				.music-mark{
+					width: fit-content;
+					min-width: 20px;
+					height: 24px;
+					position: absolute;
+					border-radius: 10px;
+					background-color: #614840;
+					pointer-events: all; /* 父物体取消了，但可以单独设置子物体！*/
+					overflow: visible;
+				}
+					.music-mark-name{
+						position: relative;
+						width: auto; /* 重要！如果设置为auto，则在最右侧标签宽度会收缩并贴在容器边缘... */
+						font-size: 12px;
+						padding: 0 8px;
+						height: 100%;
+					}
+					.music-mark-pin{
+						pointer-events: none;
+						width: 2px;
+						height: 40px;
+						position: absolute;
+						left: calc(50% - 1px);
+						top: 24px;
+						background-color: #5b4e5b;
+						opacity: 0.9;
+					}
+				#mark-context{
+					position: absolute;
+					width: 120px;
+					z-index: 8;
+					font-size: 14px;
+					opacity: 0.5;
+				}
+					#mark-context-div{
+						width: 100%;
+						height: 100%;
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						background-color: #54677c;
+						border-radius: 4px;
+						overflow: hidden;
+					}
+						#mark-context-name-zone{
+							width: 80%;
+							height: 40px;
+							
+							margin: 10px 0;
+
+							position: relative;
+							font-size: 6px;
+							color: #aaa;
+						}
+							#mark-context-name{
+								position: absolute;
+								outline: none;
+								border: 0;
+								background-color: rgba(255, 255, 255, 0.1);
+								width: 100%;
+								height: 100%;
+								text-align: center;
+								font-size: 18px;
+								color: #ffddd3;
+
+							}
+						#mark-context-locate{
+							width: 80%;
+							height: 30px;
+							border-bottom: 1.5px solid #d5c2d5;
+							margin: 5px 0;
+							opacity: 0.8;
+						}
+						#mark-context-locate:hover{
+							color: #d5c2d5;
+							opacity: 1;
+						}
+						#mark-context-delete{
+							width: 80%;
+							height: 30px;
+							border-bottom: 1.5px solid #ff625a;
+							margin: 5px 0;
+							opacity: 0.8;
+						}
+						#mark-context-delete:hover{
+							color: #ff625a;
+							opacity: 1;
+						}
+				
+
+			#music-waveform{
+				pointer-events: none;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+			}
+			
+			#slider-tick-progress{
+				position: relative;
+				height: 28px;
+				margin: 0 5px;
+				font-size: 16px;
+			}
+				#slider-tick-progress div{
+					margin: 0 2px;
+				}
+			.slider-padding{
+				position: relative;
+				width: 100px;
+				height: 100%;
+				background-color: #16c;
+			}
+
+.flex-center{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.hide{
+	display: none;
+}
+
+/* 默认滑动条样式 */
+.slider-default {
+	-webkit-appearance: none; /* 移除默认样式 */
+    width: 100%;
+    
+    height: 2px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+.slider-default:focus { /* 获取焦点后 */
+    outline: none;
+}
+.slider-default::-webkit-slider-runnable-track { /* 轨道的样式 */
+
+}
+.slider-default::-webkit-slider-thumb { /* 滑块的样式 */
+    -webkit-appearance: none; /* 移除默认样式 */
+    background-color: #ffddd3;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+
+/* 播放进度条样式 */
+#slider-music {
+	position: relative;
+
+	-webkit-appearance: none; /* 移除默认样式 */
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: transparent;
+}
+#slider-music:focus { /* 获取焦点后 */
+    outline: none;
+}
+#slider-music::-webkit-slider-thumb { /* 滑块的样式 */
+    -webkit-appearance: none; /* 移除默认样式 */
+    background-color: #e62c69;
+    width: 2px;
+    height: 70px;
+    border-radius: 0;
+    opacity: 0.9;
+}
+
+/* 切换按钮默认样式 */
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  width: 43px;
+  height: 100%;
+  margin: 0 10px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 2px;
+  left: 0;
+  height: 20px;
+  width: 40px;
+  border: 1.5px solid white;
+  -webkit-transition: .2s;
+  transition: .2s;
+  border-radius: 26px;
+}
+
+.slider:before { /* 圆球 */
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 2px;
+  background-color: #ffddd3;
+  -webkit-transition: .2s;
+  transition: .2s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  border: 1.5px solid #ffddd3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #ffddd3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}
+
+.switch div{ /* 文本 */
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+	height: 12px;
+	bottom: 0;
+}
