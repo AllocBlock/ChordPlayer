@@ -563,8 +563,6 @@ function loadMusic(file){
         var fileName = file.name.match(/(.*)\.[^.]+/)[1];
         //console.log("filename", fileName);
         $("#music-name").text(fileName);
-        updateSliderMusicVolume($("#slider-music-volume").get(0));
-        updateSliderMusicSpeed($("#slider-music-speed").get(0));
     }
 
     // 音乐时长变化的回调
@@ -644,7 +642,10 @@ function drawWaveform(canvas, arrayBuffer) {
         }
         pen.strokeStyle = "#ffddd3";
         pen.stroke();  // 填充
-
+        // 更新进度条
+        updateSliderMusicVolume($("#slider-music-volume").get(0));
+        updateSliderMusicSpeed($("#slider-music-speed").get(0));
+        
         // 隐藏提示
         hideMusicCover();
         showToast("音乐加载完成！");
