@@ -54,6 +54,10 @@ $(function(){ // 初始化
                 nextMark();
                 break;
             }
+            case 87: { // W键
+                addMark();
+                break;
+            }
         }
     });
 
@@ -249,6 +253,7 @@ function nextMark(){
         }
     }
 }
+
 /* 事件：移动到标记 */
 function markLocateClick(){
     if ($currentMark != null){
@@ -390,10 +395,11 @@ function getMarkLeftByTick(mark, tick){
 function keepTickInSight(tick, follow = "none"){
     var sightWidth = $("#music-slider-zone").width();
     var canvasWidth = $("#music-slider-zone-scale").width();
-    var maxScrollLeft = canvasWidth - sightWidth;
-    var cLeft = $("#music-slider-zone").scrollLeft();
-
     var padding = 100;
+    var cLeft = $("#music-slider-zone").scrollLeft();
+    var maxScrollLeft = canvasWidth + 2 * padding - sightWidth;
+
+    
     var tickPos = padding + tick / musicDuration * canvasWidth;
     switch(follow){
         case "none":{
@@ -520,7 +526,7 @@ function loadMusic(file){
     isMusicLoading = true;
     // 如果已经打开，则销毁
     if (music != null){
-        music.pause();
+        pauseMusic();
         music.src = "";
         $(music).remove();
     }
@@ -740,6 +746,10 @@ var sliderFrontColor = "#ffddd3";
 var bgRaw = 'linear-gradient(to right, {0}, {0} {1}%, white {1}%, white)';
 /* 更新事件：音乐音量滑动条 */
 function updateSliderMusicVolume(slider){
+    if (!isMusicLoaded){
+        showToast("请先加载音乐！");
+        return;
+    }
     $(slider).css('background', bgRaw.format(sliderFrontColor, slider.value*100));
     musicVolume = slider.value;
     if (!isMusicMuted){
@@ -762,12 +772,20 @@ var speedList = {
     10: 2.5
 }
 function updateSliderMusicSpeed(slider){
+    if (!isMusicLoaded){
+        showToast("请先加载音乐！");
+        return;
+    }
     $(slider).css('background', bgRaw.format(sliderFrontColor, (slider.value-1)/9*100));
     var musicSpeed = speedList[parseInt(slider.value)];
     music.playbackRate = musicSpeed;
     $("#music-speed-text").text("x" + musicSpeed.toFixed(1));
 }
     function resetMusicSpeed(){
+        if (!isMusicLoaded){
+            showToast("请先加载音乐！");
+            return;
+        }
         $("#slider-music-speed").val(6);
         updateSliderMusicSpeed($("#slider-music-speed").get(0));
     }
@@ -775,6 +793,10 @@ function updateSliderMusicSpeed(slider){
 
 /* 更新事件：音乐进度条移动 */
 function updateMusicSlider(slider){
+    if (!isMusicLoaded){
+        showToast("请先加载音乐！");
+        return;
+    }
     if (!isMusicSliderMoving){ // 刚开始拖拽时停止音乐
         isMusicSliderMoving = true;
         isPlayBeforeMoving = !music.paused;
@@ -822,9 +844,13 @@ function updateFollowSwitch(switchButton){
     sightFollow = $(switchButton).is(":checked");
     if (sightFollow){
         $("#music-follow-text").text("跟随开");
+        // 提示
+        showToast("视角跟随进度条 - 开启");
     }
     else{
         $("#music-follow-text").text("跟随关");
+        // 提示
+        showToast("视角跟随进度条 - 关闭");
     }
 }
 
@@ -858,4 +884,14 @@ function eventFileDrop(e){
 
     // 加载音乐
     loadMusic(file);
+}
+
+/* 开启帮助面板 */
+function showHelp(){
+    $("#music-help").fadeIn(200);
+}
+
+/* 关闭帮助面板 */
+function hideHelp(){
+    $("#music-help").fadeOut(300);
 }

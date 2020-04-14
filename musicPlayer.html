@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>音乐播放器~</title>
+		<link rel="shortcut icon" href="favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="css/musicPlayer.css">
 		<script src="js/jquery-3.4.1.js"></script>
 		<script src="js/jquery.color-2.1.2.js"></script>
@@ -14,13 +15,71 @@
 		<div id="toast-contain" class="flex-center full">
 			<div id="toast" class="flex-center hide"></div>
 		</div>
-		<div id="mark-context" style="display: none;">
+		<div id="mark-context" class="hide">
 			<div id="mark-context-div">
 				<div id="mark-context-name-zone" class="flex-center">
 					<input type="text" id="mark-context-name" onchange="updateMarkName(this)" maxlength="10"/>
 				</div>
 				<div id="mark-context-locate" class="flex-center" onclick="markLocateClick()">定位到这里</div>
 				<div id="mark-context-delete" class="flex-center" onclick="markDeleteClick()">删除</div>
+			</div>
+		</div>
+		<div id="music-help" class="flex-center hide" onclick="hideHelp()">
+			<div id="music-help-content" class="flex-center">
+				<p style="font-size: 40px; color: #5ea9bc">音乐播放器~ By 锦瑟 2020年4月</p>
+				<div class="music-help-row flex-center">
+					<div style="width: 50%;">
+						<h1>介绍</h1>
+						<p>这是一个音乐播放器。</p>
+						<p>你可以方便的跳转到指定的进度，并在各个位置添加标记，以及跳转到各个标记。</p>
+						<p style="display: block;">你需要加载本地的音乐文件。如果你不知道去哪儿找的话，可以试试这个网站：<a href="https://defcon.cn/dmusic/" target="_blank">音乐搜索器</a></p>
+					</div>
+					<div class="music-help-sperator"></div>
+					<div style="width: 50%;">
+						<h1>页面布局</h1>
+						<p>上方 - 标题，选择文件</p>
+						<p>中间 - 没啥东西</p>
+						<p>下方 - 进度条、播放控制以及标记功能</p>
+						<h1>功能 和 快捷键</h1>
+						<div class="music-help-column">
+							<p>
+								<embed src="imgs/mark.svg" type="image/svg+xml"/> 点击添加标记（快捷键W)
+							</p>
+							<p>
+								<embed src="imgs/prevArrow.svg" type="image/svg+xml"/>
+								上一个标记（快捷键Q)
+							</p>
+							<p>
+								<embed src="imgs/nextArrow.svg" type="image/svg+xml"/>
+								下一个标记（快捷键E)
+							</p>
+							<p>
+								<embed src="imgs/trash.svg" type="image/svg+xml"/>
+								删除所有标记
+							</p>
+							<p>
+								<embed src="imgs/volume.svg" type="image/svg+xml"/>
+								<embed src="imgs/muted.svg" type="image/svg+xml"/>
+								音量/静音
+							</p>
+							<p>
+								<embed src="imgs/speed.svg" type="image/svg+xml"/>
+								播放速度
+							</p>
+							<p>
+								<embed src="imgs/play.svg" type="image/svg+xml"/>
+								<embed src="imgs/pause.svg" type="image/svg+xml"/>
+								播放/暂停（快捷键Space)
+							</p>
+							<p>
+								<embed src="imgs/stop.svg" type="image/svg+xml"/>
+								停止
+							</p>
+							<p style="font-weight: bold;">标记上按右键可以打开编辑菜单！</p>
+							<p style="font-weight: bold;">标记上按住Ctrl拖拽可以复制！</p>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- 主体 -->
@@ -40,7 +99,7 @@
 				<div id="music-control">
 					<div class="music-button-zone flex-center">
 						<div class="music-button flex-center" onclick="addMark()">
-							<embed src="imgs/add.svg" type="image/svg+xml"/>
+							<embed src="imgs/mark.svg" type="image/svg+xml"/>
 						</div>
 						<div class="music-button flex-center" onclick="prevMark()">
 							<embed src="imgs/prevArrow.svg" type="image/svg+xml"/>
@@ -89,7 +148,7 @@
 							<embed id="music-pause-icon" src="imgs/pause.svg" type="image/svg+xml" class="hide" />
 						</div>
 						<div class="music-button flex-center" onclick="stopMusic()">
-							<embed src="imgs/stop.svg" type="image/svg+xml"/>
+							<embed id="music-stop-icon" src="imgs/stop.svg" type="image/svg+xml"/>
 						</div>
 
 						
@@ -104,6 +163,8 @@
 			</div>
 		</div>
 		
-
+		<div id="music-help-icon-div" onclick="showHelp()">
+			<embed src="imgs/help.svg" type="image/svg+xml"/>
+		</div>
 	</body>
 </html>

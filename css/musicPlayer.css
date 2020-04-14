@@ -6,7 +6,6 @@ html, body{
 
 	padding: 0;
 	margin: 0;
-	background-color: #a88;
 	position: relative;
 	color: white;
 	font-family: "微软雅黑";
@@ -18,9 +17,16 @@ html, body{
 }
 
 embed{
-	width: 25px;
-	height: 25px;
+	width: 28px;
+	height: 28px;
 	pointer-events: none;
+}
+
+a, a:visited, a:link, a:active {
+    color: #a88;
+}
+a:hover{
+	color: white;
 }
 
 ::selection{
@@ -81,8 +87,71 @@ embed{
 	}
 	#music-hint-cover:hover{
 		background-color: rgba(100, 100, 100, 0.8);
-		color: #ffddd3;
+		color: #ff625a;
 	}
+	#music-help{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.6);
+		color: #ffddd3;
+		z-index: 5;
+
+	}
+		#music-help-content{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			flex-direction: column;
+		}
+		#music-help-content p{
+			margin: 3px 0;
+			display: flex;
+			align-items: center;
+		}
+		#music-help-content embed{
+			margin: 0 10px 0 0;
+		}
+		#music-help-content h1{
+			font-size: 24px;
+			color: white;
+			margin: 5px 0;
+		}
+		.music-help-column{
+			display: flex;
+			flex-direction: column;
+			align-items: left;
+		}
+		.music-help-row{
+			width: 80%;
+		}
+		.music-help-sperator{
+			position: relative;
+			width: 2px;
+			height: 80%;
+			background-color: white;
+			margin: 0 10px;
+			opacity: 0.5;
+		}
+
+		#music-help-icon-div{
+			pointer-events: all;
+			position: absolute;
+			width: 30px;
+			height: 30px;
+			left: 5px;
+			bottom: 5px;
+			opacity: 0.5;
+			transition: opacity 0.2s;
+		}
+		#music-help-icon-div:hover{
+			opacity: 1;
+		}
+			#music-help-icon-div embed{
+				width: 30px;
+				height: 30px;
+			}
+		
 
 	#music-header{
 		flex-shrink: 0;
@@ -109,7 +178,7 @@ embed{
 	#music-visualize{
 		width: 100%;
 		height: calc(100% - 220px);
-		background-color: ff625a;
+		background-color: #a88;
 	}
 		#music-visualize embed{
 			height: 60%;
@@ -155,7 +224,6 @@ embed{
 					width: 20px;
 					height: 20px;
 					top: 4px;
-					
 				}
 				.music-button-with-text div{
 					pointer-events: none;
@@ -178,6 +246,10 @@ embed{
 		#slider-music-speed{
 			position: relative;
 			width: 100px;
+		}
+		#music-play-icon, #music-pause-icon, #music-stop-icon{
+			width: 28px;
+			height: 28px;
 		}
 	#music-slider-zone{
 		position: relative;
